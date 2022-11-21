@@ -1,32 +1,18 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Humans extends Human implements DoChild {
-
+    static ArrayList<Humans> allHumans = new ArrayList<>();
+    static GenealogicTree<Child> genealogicTree = new GenealogicTree<>();
     private boolean married;
-    private boolean isChild;
     private int husbandID;
-    int parent_id;
     private int wife_id;
 
-    static ArrayList<Humans> allHumans = new ArrayList<>();
-    static Map<Integer, ArrayList<Humans>> genealogicTree = new HashMap<>();
-
-    Humans(String name, String surname,String patronimyc, Gender gender, ArrayList<Humans> allHumans) {
+    Humans(String name, String surname, String patronimyc, Gender gender) {
         super(name,surname, gender);
         this.married = false;
         this.patronimyc = patronimyc;
     }
 
-    private Humans(String name, String surname, Gender gender, boolean isChild, int parent_id){
-        super(name,surname, gender);
-        this.isChild = isChild;
-        this.married = false;
-        this.patronimyc = (this.gender == "Male") ? name + "ovich" : name + "ovna";
-        this.parent_id = parent_id;
-    }
 
     @Override
     public String toString() {
@@ -43,26 +29,19 @@ public class Humans extends Human implements DoChild {
     }
 
     @Override
-    public void DoChild(Humans parent2, Map<Integer, ArrayList<Humans>> genealogicTree){
+    public void DoChild(Humans parent2, GenealogicTree<Child> genealogicTree){
+
 
         if (!doMarrie(this, parent2)){
             return;
         }
         String childName  = getChildName(this,parent2);
         String surname = this.getSurname();
+        Humans mother =  (this.getGender() == "Female") ? this : parent2;
+        Humans father = (this.getGender() == "Male") ? this : parent2;
 
-        var child = new Humans(childName, surname, Human.Gender.Male, true,
-                parent_id = (this.getGender() == "Male") ? this.getId() : parent2.getId());
-
-        if(!genealogicTree.containsKey((this.getGender() == "Male") ? this.getId() : parent2.getId())) {
-            ArrayList<Humans> childs = new ArrayList<>();
-            childs.add(child);
-            genealogicTree.put(child.getParent_id(), childs);
-        }else {
-            ArrayList<Humans> list = genealogicTree.get((this.getGender() == "Male") ? this.getId() : parent2.getId());
-            list.add(child);
-        }
-
+        var child = new Child(childName, surname, Human.Gender.Male,mother ,father);
+        Child.childs.add(child);
     }
 
     public static boolean doMarrie(Humans parent1, Humans parent2){
@@ -112,47 +91,20 @@ public class Humans extends Human implements DoChild {
         return firstPart + secondPart;
     }
 
-    public static void findAndPrintTreeByID(){
+    public static void PrintTreeByID(){
 
         int id = getIdForSearch();
-        String father = null;
-        String mother = null;
-        int mthrId = 0;
 
-        if(!genealogicTree.containsKey(id)) {
-            for(Humans hum : allHumans){
-                if(hum.getId() == id){
-                    id = hum.getHusbandID();
-                }
+        for (int i = 0; i < Child.childs.size(); i++) {
+            if (id - 1 == i){
+                System.out.println(Child.childs.get(i));
             }
         }
-
-        for(Humans hum : allHumans){
-            if(hum.getId() == id){
-                father = "Отец = " + hum;
-                mthrId = hum.getWife_id();
-            }
-        }
-
-        for(Humans hum : allHumans){
-            if(hum.getId() == mthrId){
-                mother = "Мать = " + hum;
-            }
-        }
-
-        System.out.println(mother + "\n" + father);
-
-        for(int ids : genealogicTree.keySet()){
-            if(ids == id){
-                System.out.println("Дети: \n" + genealogicTree.get(id));
-            }
-        }
-
     }
 
     private static int getIdForSearch(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Введите число от 1 до " + allHumans.size() + " для поиска генеалогического древа");
+        System.out.println("Введите число от 1 до " + Child.childs.size() + " для поиска генеалогического древа ребенка");
 
         int id = sc.nextInt();
 
@@ -167,12 +119,6 @@ public class Humans extends Human implements DoChild {
         this.married = marryed;
     }
 
-    public boolean isChild() {
-        return isChild;
-    }
-    public int getParent_id() {
-        return parent_id;
-    }
 
     public int getHusbandID() {
         return husbandID;

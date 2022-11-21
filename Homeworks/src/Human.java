@@ -6,6 +6,7 @@ public abstract class Human {
     static int count = 0;
     String gender;
 
+
     public enum Gender{
         Male,
         Female
