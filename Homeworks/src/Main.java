@@ -1,82 +1,27 @@
 public class Main {
     public static void main(String[] args) {
-
-        getArithmeticExeption();
-        getNullPointerException();
-        getIndexOfBoundException();
-
-        int[] a = {1, 4, 2, 5, 7};
-        int[] b = {3, 11, 4, 5, 5};
-        try{
-            for(int i : getSumm(a, b)){
-                System.out.println(i);
-            }
-
-        } catch (RuntimeException e){
-            System.out.println(e);
-        }
-        System.out.println();
-        try{
-            for(int i : getChastnoe(a, b)){
-                System.out.println(i);
-            }
-        } catch (RuntimeException e){
-            System.out.println(e);
-        }
-    }
-
-    static int getArithmeticExeption() {
-        int a = 10;
-        int b = 0;
-        int result = 0;
+        Task1.checkIfUserNumberIsFloat();
+        Task2.divideArrayNums();
         try {
-            result = a / b;
+            int a = 90;
+            int b = 0;
+            String x = null;
+            int[] abc = {1, 2};
+            System.out.println(abc[3]); // Вызовет IndexOutOfBoundsException
+            abc[3] = 9; // Вызовет IndexOutOfBoundsException
+            System.out.println(x.length()); // Вызовет NullPointerException
+            System.out.println(a / b); // Вызовет ArithmeticException
+            Task3.printSum(23, 234); // Исключение невозможно
+
+        } catch (NullPointerException ex) {
+            System.out.println("Указатель не может указывать на null!");
+        } catch (IndexOutOfBoundsException ex) {
+            System.out.println("Массив выходит за пределы своего размера!");
         } catch (ArithmeticException e) {
-            System.out.println(e.fillInStackTrace());
+            System.out.println("Деление на ноль!");
+        } catch (Throwable ex) {
+            System.out.println("Что-то пошло не так...");
         }
-        return result;
-    }
-    static void getNullPointerException(){
-        String str =  null;
-        try{
-            System.out.println(str.length());
-        }
-        catch (NullPointerException e){
-            System.out.println(e.fillInStackTrace());
-        }
-    }
-
-    static void getIndexOfBoundException(){
-        int[] arr = new int[5];
-        try{
-            System.out.println(arr[7]);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println(e.fillInStackTrace());
-        }
-    }
-
-    static int[] getSumm(int[] a, int[] b){
-        int[] result = new int[a.length];
-        if(a.length > b.length || b.length > a.length){
-            throw new RuntimeException("Длины массивов не равны, суммирование невозможно");
-        }
-        for(int i = 0; i < a.length; i++){
-            result[i] = a[i] - b[i];
-        }
-        return result;
-    }
-    static int[] getChastnoe(int[] a, int[] b){
-        int[] result = new int[a.length];
-        if(a.length > b.length || b.length > a.length){
-            throw new RuntimeException("Длины массивов не равны, суммирование невозможно");
-        }
-        for(int i = 0; i < a.length; i++){
-            if(b[i] == 0){
-                throw new RuntimeException("b = " +b[i] + " Деление на ноль невозможно");
-            }
-            result[i] = a[i] / b[i];
-        }
-        return result;
+        Task4.printUserString();
     }
 }
